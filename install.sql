@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS 'boards' (
+  'uri' VARCHAR(255) NOT NULL PRIMARY KEY,
+  'title' VARCHAR(255) NOT NULL,
+  'subtitle' VARCHAR(255),
+)
