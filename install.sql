@@ -55,3 +55,34 @@ CREATE TABLE IF NOT EXISTS posts(
   -- Timestamps
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE OR REPLACE FUNCTION assign_post_number()
+RETURNS TRIGGER AS $$
+DECLARE
+  parent_board VARCHAR(255);
+  previous_post_number INTEGER;
+BEGIN
+  -- 1. Find the board_uri of the thread this post belongs to
+  SELECT board_uri INTO parent_board FROM threads where id = NEW.thread_id;
+
+  --2. Select the maximum post_number for the thread and increment it by 1 for the new post
+  SELECT MAX(post_number) INTO previous_post_number FROM posts
+  WHERE thread_id = NEW.thread_id;
+
+  IF previous_post_number IS NULL THEN
+    previous_post_number := 0;
+  END IF;
+
+  NEW.post_number := previous_post_number + 1;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS assign_post_number_trigger ON posts;
+
+CREATE TRIGGER assign_post_number_trigger
+BEFORE INSERT ON posts
+FOR EACH ROW
+EXECUTE FUNCTION assign_post_number();
+
+-- TODO: Automatically update reply_count, image_count, and bump_time in threads when posts are added or removed.
