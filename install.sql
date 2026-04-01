@@ -84,5 +84,3 @@ CREATE TRIGGER assign_post_number_trigger
 BEFORE INSERT ON posts
 FOR EACH ROW
 EXECUTE FUNCTION assign_post_number();
-
--- TODO: Automatically update reply_count, image_count, and bump_time in threads when posts are added or removed.
