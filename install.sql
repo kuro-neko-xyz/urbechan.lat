@@ -61,6 +61,7 @@ RETURNS TRIGGER AS $$
 DECLARE
   parent_board VARCHAR(255);
   previous_post_number INTEGER;
+  op_ip_address INET;
 BEGIN
   -- 1. Find the board_uri of the thread this post belongs to
   SELECT board_uri INTO parent_board FROM threads
@@ -76,15 +77,29 @@ BEGIN
 
   NEW.post_number := previous_post_number + 1;
 
-  --3. Increment reply count on thread by 1
+  SELECT ip_address INTO op_ip_address FROM posts
+  WHERE thread_id = NEW.thread_id
+  ORDER BY created_at ASC;
+
+  --3. Set is_op
+
+  IF op_ip_address IS NULL THEN
+    NEW.is_op := TRUE;
+  END IF;
+
+  IF op_ip_address = NEW.ip_address THEN
+    NEW.is_op := TRUE;
+  END IF;
+
+  --4. Increment reply count on thread by 1
   UPDATE threads SET reply_count = reply_count + 1 WHERE id = NEW.thread_id;
 
-  --4. Increment image count on thread by 1 if image URL is present
+  --5. Increment image count on thread by 1 if image URL is present
   IF NEW.image_url IS NOT NULL THEN
     UPDATE threads SET image_count = image_count + 1 WHERE id = NEW.thread_id;
   END IF;
 
-  --5. Update thread bump time
+  --6. Update thread bump time
   UPDATE threads SET bump_time = NEW.created_at WHERE id = NEW.thread_id;
 
   RETURN NEW;
