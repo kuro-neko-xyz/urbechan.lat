@@ -1,0 +1,24 @@
+{
+  "name": "urbechan.lat",
+  "version": "1.0.0",
+  "description": "A Spanish language imageboard",
+  "homepage": "https://github.com/kuro-neko-xyz/urbechan.lat#readme",
+  "bugs": {
+    "url": "https://github.com/kuro-neko-xyz/urbechan.lat/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kuro-neko-xyz/urbechan.lat.git"
+  },
+  "license": "GPL-3.0",
+  "author": "",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "fastify": "^5.8.5"
+  }
+}
