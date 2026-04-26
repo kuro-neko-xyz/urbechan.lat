@@ -21,3 +21,13 @@ On a bash shell run:
 cd <path to project>
 psql -U urbechan -d urbechan -a -f install.sql
 ```
+
+To clear database run as postgres user:
+```
+psql -a -f pre.sql -v "<your password>"
+```
+
+To test database run:
+```
+psql -U urbechan -d urbechan -a -f install.spec.sql
+```
