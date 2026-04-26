@@ -31,3 +31,8 @@ To test database run:
 ```
 psql -U urbechan -d urbechan -a -f install.spec.sql
 ```
+
+To run server:
+```
+npm run start
+```
